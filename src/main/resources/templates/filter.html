@@ -8,7 +8,9 @@
 <a href="/home">Домой</a>
 <div><h2>Найдены следующие сообщения</h2></div>
 <form method="post" action="/home/filter">
-    <input type="text" name="filter" placeholder="Фильтр по тегам...">
+    <label>
+        <input type="text" name="filter" placeholder="Фильтр по тегам...">
+    </label>
     <button type="submit">Отфильтровать</button>
 </form>
 <div th:each="msg : ${messages}">

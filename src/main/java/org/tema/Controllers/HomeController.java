@@ -1,14 +1,11 @@
-package org.example.Controllers;
+package org.tema.Controllers;
 
-import org.example.Repositories.MessageRepository;
-import org.example.domain.Message;
+import org.tema.Repositories.MessageRepository;
+import org.tema.domain.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Objects;
 
 @Controller
 public class HomeController {
@@ -16,8 +13,13 @@ public class HomeController {
     @Autowired
     private MessageRepository messageRepository;
 
+    @GetMapping("/")
+    public String index(Model model){
+        return "index";
+    }
+
     @GetMapping("/home")
-    public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
+    public String home(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
         Iterable<Message> all = messageRepository.findAll();
 
         model.addAttribute("name", name);
@@ -37,7 +39,7 @@ public class HomeController {
 
         Iterable<Message> all = messageRepository.findAll();
         model.addAttribute("messages", all);
-        return "redirect:/home"; //без редиректа каждый раз при обновлении страницы заного отправляет форму
+        return "redirect:/home"; //без редиректа каждый раз при обновлении страницы заново отправляет форму
     }
 
     @PostMapping( "/home/filter")

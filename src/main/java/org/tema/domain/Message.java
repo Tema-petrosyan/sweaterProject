@@ -1,10 +1,9 @@
-package org.example.domain;
+package org.tema.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import org.example.Repositories.MessageRepository;
 
 @Entity
 public class Message {

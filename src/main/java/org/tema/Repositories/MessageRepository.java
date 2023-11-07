@@ -1,6 +1,6 @@
-package org.example.Repositories;
+package org.tema.Repositories;
 
-import org.example.domain.Message;
+import org.tema.domain.Message;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

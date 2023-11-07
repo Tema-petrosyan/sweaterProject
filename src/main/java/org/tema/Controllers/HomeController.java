@@ -1,42 +1,43 @@
-package org.example.Controllers;
+package org.tema.Controllers;
 
-import org.example.Repositories.MessageRepository;
-import org.example.domain.Message;
+import org.tema.Repositories.MessageRepository;
+import org.tema.domain.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Objects;
+import java.security.Principal;
 
 @Controller
 public class HomeController {
-
-    @Autowired
     private MessageRepository messageRepository;
+    @Autowired
+    public void setMessageRepository(MessageRepository messageRepository) {
+        this.messageRepository = messageRepository;
+    }
 
     @GetMapping("/home")
-    public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
+    public String userAccess(Model model, Principal principal) {
+        if(principal == null)
+            return null;
+
         Iterable<Message> all = messageRepository.findAll();
 
-        model.addAttribute("name", name);
+        model.addAttribute("name", principal.getName());
         model.addAttribute("messages", all);
         return "home";
     }
 
     @PostMapping("/home")
-    public String postMessage(@RequestParam(name="name", required=false, defaultValue="World") String name,
-                              @RequestParam String text,
-                              @RequestParam String tags, Model model) {
-        model.addAttribute("name", name);
-        if(!text.equals("") && !tags.equals("")) {
+    public String postMessage(@RequestParam String text, @RequestParam String tags, Model model) {
+        if(!text.isEmpty() && !tags.isEmpty()) {
             Message message = new Message(text, tags);
             messageRepository.save(message);
         }
 
-        Iterable<Message> all = messageRepository.findAll();
-        model.addAttribute("messages", all);
+//        Iterable<Message> all = messageRepository.findAll();
+//        model.addAttribute("messages", all);
         return "redirect:/home"; //без редиректа каждый раз при обновлении страницы заного отправляет форму
     }
 

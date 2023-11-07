@@ -1,7 +1,6 @@
 package org.tema.jwt;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecretJwk;
@@ -31,4 +30,9 @@ public class JwtCore {
                 .compact();
     }
 
+    public String getUsername(String token){
+        SecretKey expectedSign = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+        JwtParser parser = Jwts.parser().verifyWith(expectedSign).build();
+        return parser.parseSignedClaims(token).getPayload().getSubject();
+    }
 }

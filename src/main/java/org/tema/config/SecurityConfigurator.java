@@ -1,6 +1,7 @@
 package org.tema.config;
 
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.tema.jwt.TokenFilter;
 import org.tema.services.UserService;
 
 @Configuration
@@ -24,6 +27,12 @@ import org.tema.services.UserService;
 @NoArgsConstructor
 public class SecurityConfigurator {
     private UserService userService;
+    private TokenFilter tokenFilter;
+
+    @Autowired
+    public void setTokenFilter(TokenFilter tokenFilter) {
+        this.tokenFilter = tokenFilter;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -58,7 +67,8 @@ public class SecurityConfigurator {
                 .authorizeHttpRequests(request -> request
                                 .requestMatchers("/auth/**", "/").permitAll()
                                 .requestMatchers("/home/**").fullyAuthenticated()
-                );
+                )
+                .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
